@@ -9,31 +9,26 @@ p2v={"Thr790Met":"7_55249071_C_T", "19del":"7_552424[6-7][0-9]", "Arg132Cys":"2_
      "Gly719Ala":"7_55241708_G_C", "Gly719Cys":"7_55241707_G_T", "Gly719Ser":"7_55241707_G_A", "His1047Arg":"3_178952085_A_G", "His1047Leu":"3_178952085_A_T",
      "Leu858Arg":"7_55259515_T_G", "Leu861Gln":"7_55259524_T_A", "Ser768Ile":"7_55249005_G_[AT]", "Val600Glu":"7_140453136_A_T", "Glu545Lys":"3_178936091_G_A"}
 
-def read_support(sinfo): #11:121432086|+-172|GATAGGTT+GCTCAATG#-1:1:23:-1:1.0
+def read_support(sinfo):
 	stmp = re.split('\|',sinfo)
 	pos = re.split(':',stmp[0])[1]
 	ins_oriention = stmp[1][:2]
 	insertsize = stmp[1][2:]
 	tag = re.split('#',stmp[2])[0]
-	return pos,ins_oriention,insertsize,tag #121432086,+-,172,GATAGGTT+GCTCAATG
+	return pos,ins_oriention,insertsize,tag
 
 def compare_support(sinfo1,sinfo2):
 	pos1,ins_oriention1,insertsize1,tag1 = read_support(sinfo1)
 	pos2,ins_oriention2,insertsize2,tag2 = read_support(sinfo2)
 	if ins_oriention1 != ins_oriention2[::-1]:  #+- ~ -+
-		print sinfo1,sinfo2,"oriention is not pair"
 		return False
 	elif insertsize1 != insertsize2:
-		print sinfo1,sinfo2,"insertsize is not same"
 		return False
 	elif tag1 != '+'.join(re.split('\+',tag2)[::-1]):
-		print sinfo1,sinfo2,"tag info is not pair"
 		return False
 	elif pos1 not in [str(int(pos2)-1),pos2,str(int(pos2)+1)]:
-		print sinfo1,sinfo2,('%s is not in %s') % (int(pos1),[int(pos2)-1,int(pos2),int(pos2)+1])
 		return False
 	else:
-		print sinfo1,sinfo2,'is in double strand'
 		return True
 
 def vcf_key_compare(path,ddpcr_key):
