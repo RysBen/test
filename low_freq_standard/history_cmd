@@ -1,0 +1,52 @@
+#masked
+
+#select 17 samples randomly
+grep CT_DNA_800a063 /zz/limssheet/lims.csv|tail -n 1500|shuf -n 150|cut -d',' -f5|tr -d '"' > random150
+for i in `cat random150`
+do
+lu=`ls /cp/*panel*/*${i}*/report/lims_upload.sh`
+if [[ -f $lu ]];then 
+    rdir=`dirname $lu`
+    wc -l $rdir/*final.xls
+fi
+done
+
+#Create dir and corresponding filter scripts
+###2
+for i in `cat list17`
+do
+mkdir $i
+sh /rys/filter_flow/filter_gen.sh $i /rys/${i}
+done
+for i in `cat list17`
+do
+mkdir $i
+sh /rys/filter_flow/filter_gen_2.sh $i /rys/${i}
+done
+###3(omit)
+
+###2b
+for i in `cat list17`
+do mkdir ${i}_2b
+sh /rys/filter_flow/filter_gen_2b.sh $i /rys/${i}_2b
+done
+
+#running scripts,will yield *final.xls_1,*final.xls_2,*final.xls_3
+for i in `cat list17`
+do echo "cd /rys/${i}_2b;qsub filter.sh"
+done
+
+#gather results
+for i in `cat list17`
+do 
+cat /cp/*panel*/*${i}*/report/*final.xls_1 > mut_list.xls
+cat /rys/${i}_2b/*final.xls_2 >> mut_list.xls
+cat /rys/${i}_3/report/newsort.final.xls_3 >> mut_list.xls
+done
+
+for i in `cat list17`
+do
+rm /cp/*panel*/*${i}*/report/*final.xls_1
+rm /rys/${i}_2b/*final.xls_2
+rm /rys/${i}_3/report/newsort.final.xls_3
+done
