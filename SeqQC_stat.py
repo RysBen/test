@@ -20,7 +20,7 @@ for l in open('list','r'):
         seqQC[i]=''
         seqQC_nf.append(i)
 
-
+# Newdemand: use data storing in cold backup
 for i in seqQC_nf:
     seqQC_path_cb=glob.glob("/biocluster/data/biobk/user_test/renshuaibing/seqQc_final/cb/"+i+"_library_QC_report.xls")
     if seqQC_path_cb != []:
