@@ -4,10 +4,10 @@ sample=$1
 out=$2
 gene_file=/yc/database/panel825-63_mutgene.txt
 
-echo cp /public/*panel*/*${sample}*/var_seq/*removed_dup.vcf . > ${out}/filter.sh
+echo cp /cp/*panel*/*${sample}*/var_seq/*removed_dup.vcf . > ${out}/filter.sh
 
 echo ##########################################################################################filter1 >> ${out}/filter.sh
-echo python /rys/tasks/LowFreq_200508/filter_flow/ctdna_filter_step1_test.py \
+echo python /rys/filter_flow/ctdna_filter_step1_test.py \
 --input_vcf ${sample}.snp.removed_dup.vcf \
 --false_position /ct181/database/false_positive.txt \
 --read_support 4 \
@@ -17,7 +17,7 @@ echo python /rys/tasks/LowFreq_200508/filter_flow/ctdna_filter_step1_test.py \
 --out_success ${sample}.snp.merge.support.vcf.step1.filted.vcf \
 --out_fail ${sample}.snp.merge.support.vcf.step1.fail.vcf >> ${out}/filter.sh
 
-echo python /rys/tasks/LowFreq_200508/filter_flow/ctdna_filter_step1_test.py \
+echo python /rys/filter_flow/ctdna_filter_step1_test.py \
 --input_vcf ${sample}.indel.removed_dup.vcf \
 --false_position /ct181/database/false_positive.txt \
 --read_support 4 \
@@ -60,7 +60,7 @@ echo python /ct/snpIndel_annotate.py \
 -c l \
 -C L >> ${out}/filter.sh
 
-echo "while read a b;do grep \$a $sample.annotate.xls |grep \$b >> $sample.annotate.consequence.filter.xls;done < /biocluster/data/biobk/user_test/yangcan/database/synonymous_variant.xls" >> ${out}/filter.sh
+echo "while read a b;do grep \$a $sample.annotate.xls |grep \$b >> $sample.annotate.consequence.filter.xls;done < /yc/database/synonymous_variant.xls" >> ${out}/filter.sh
 
 echo sh /zn/T-CT_diff/PGDX/pipe_code/pgdxFilter.sh \
 $sample.snp_indel.final.vcf \
