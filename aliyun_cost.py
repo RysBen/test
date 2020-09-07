@@ -25,8 +25,18 @@ product.plot(kind='pie',autopct='%.2f%%',ax=ax,radius=1,textprops={'fontsize':7}
 ax.set_aspect('equal')
 ax.set_title('xxx')
 
-#product-day
+ig,ax=plt.subplots()
+ax.pie(date_product.sum().sort_values(ascending=False), explode=(0,0,0,0,0,0,0.2,0.4,0.6), autopct='%1.1f%%');ax.axis('equal')
+ax.set_title('费用占比')
+plt.show()
 
+
+#product-day
+date_product=cost.groupby(['date','产品明细Code'])['应付金额'].sum().unstack()
+date_product.index=pd.to_datetime(date_product.index)
+fig,ax=plt.subplots()
+date_product.drop(['vm','sls','eip','slb','nat_gw','ecs'],axis=1).plot.area(stacked=False)
+plt.show()
 
 
 '''
