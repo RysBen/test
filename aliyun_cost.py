@@ -10,35 +10,72 @@ cost=pd.read_csv('/biocluster/data/biobk/user_test/renshuaibing/aliyun_cost/2020
 cost.replace('-',np.nan,inplace=True)   #np.nan vs. 'NaN'
 cost['date']=cost['账单开始时间'].fillna(cost['消费时间']).astype('str').str.split(' ',expand=True)[0]
 
-#total-day
-total=cost['应付金额'].groupby(cost['date']).sum()
-total.index=pd.to_datetime(total.index)
-#bar
-fig, ax = plt.subplots(figsize=(10, 6))
-ax.xaxis.set_major_formatter(mdates.DateFormatter('%d'))
-ax.bar(total.index, total, align='center')
-
-#product
-product=cost['应付金额'].groupby(cost['产品明细']).sum()
-#pie
-fig,ax = plt.subplots()
-product.plot(kind='pie',autopct='%.2f%%',ax=ax,radius=1,textprops={'fontsize':7})
-ax.set_aspect('equal')
-ax.set_title('xxx')
-
-ig,ax=plt.subplots()
-ax.pie(date_product.sum().sort_values(ascending=False), explode=(0,0,0,0,0,0,0.2,0.4,0.6), autopct='%1.1f%%');ax.axis('equal')
-ax.set_title('费用占比')
-plt.show()
-
-
-#product-day
 date_product=cost.groupby(['date','产品明细Code'])['应付金额'].sum().unstack()
 date_product.index=pd.to_datetime(date_product.index)
-fig,ax=plt.subplots()
-date_product.drop(['vm','sls','eip','slb','nat_gw','ecs'],axis=1).plot.area(stacked=False)
-plt.show()
 
+##################
+#存储
+##################
+date_product.drop(['vm','sls','eip','slb','nat_gw','ecs'],axis=1).plot.area(stacked=False,title='Cloud Storage Cost')
+plt.legend(loc=1, prop={'size': 10})
+plt.ylabel('cost')
+plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%d'))
+plt.xticks(rotation=0)
+plt.gca().xaxis.set_minor_locator(mdates.DayLocator())
+plt.grid()
+plt.gcf().set_size_inches(16, 9)
+plt.gcf().savefig('storage.png', dpi=100)
+#plt.show()
+plt.clf()
+
+##################
+#计算
+##################
+fig,ax1=plt.subplots()
+ax2=ax1.twinx()
+date_product.drop(['vm','sls','eip','slb','nat_gw','oss','naspost','yundisk'],axis=1).plot.area(stacked=False,ax=ax1)
+date_product.drop(['ecs','sls','eip','slb','nat_gw','oss','naspost','yundisk'],axis=1).plot.area(stacked=False,ax=ax2,color='salmon')
+ax1.set_title('Cloud Computering Cost')
+ax1.set_ylabel('cost_ecs')
+ax2.set_ylabel('cost_vm')
+ax1.legend(loc=2, prop={'size': 10})
+ax2.legend(loc=1, prop={'size': 10})
+plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%d'))
+plt.xticks(rotation=0)
+plt.gca().xaxis.set_minor_locator(mdates.DayLocator())
+ax1.grid()
+plt.gcf().set_size_inches(16, 9)
+plt.gcf().savefig('comp.png', dpi=100)
+#plt.show()
+plt.clf()
+
+##################
+#其它
+##################
+date_product.drop(['ecs','vm','oss','naspost','yundisk'],axis=1).plot.area(stacked=False,title='Other Services Cost')
+plt.legend(loc=1, prop={'size': 10})
+plt.ylabel('cost')
+plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%d'))
+plt.xticks(rotation=0)
+plt.gca().xaxis.set_minor_locator(mdates.DayLocator())
+plt.grid()
+plt.gcf().set_size_inches(16, 9)
+plt.gcf().savefig('others.png', dpi=100)
+#plt.show()
+plt.clf()
+
+##################
+#概览
+##################
+labels=['ecs','vm','naspost','oss','yundisk','sls','nat_gw','slb','eip']
+colors=['tomato','salmon','yellowgreen','lightgreen','limegreen','lightskyblue','orange','gold','yellow']
+plt.pie(date_product.sum().sort_values(ascending=False), explode=(0,0,0,0,0,0,0.2,0.4,0.6), autopct='%1.2f%%', \
+labels=labels,colors=colors,\
+textprops={'fontsize': 8})
+plt.axis('equal')
+plt.legend()
+plt.show()
+plt.clf()
 
 '''
 #cost['产品明细'].drop_duplicates()
