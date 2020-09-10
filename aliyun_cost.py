@@ -14,76 +14,81 @@ date_product=cost.groupby(['date','产品明细Code'])['应付金额'].sum().uns
 date_product.index=pd.to_datetime(date_product.index)
 
 ##################
-#存储
-##################
-date_product.drop(['vm','sls','eip','slb','nat_gw','ecs'],axis=1).plot.area(stacked=False,title='Cloud Storage Cost')
-plt.legend(loc=1, prop={'size': 10})
-plt.ylabel('cost')
-plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%d'))
-plt.xticks(rotation=0)
-plt.gca().xaxis.set_minor_locator(mdates.DayLocator())
-plt.grid()
-plt.gcf().set_size_inches(16, 9)
-plt.gcf().savefig('storage.png', dpi=100)
-#plt.show()
-plt.clf()
-
-##################
-#计算
-##################
-fig,ax1=plt.subplots()
-ax2=ax1.twinx()
-date_product.drop(['vm','sls','eip','slb','nat_gw','oss','naspost','yundisk'],axis=1).plot.area(stacked=False,ax=ax1)
-date_product.drop(['ecs','sls','eip','slb','nat_gw','oss','naspost','yundisk'],axis=1).plot.area(stacked=False,ax=ax2,color='salmon')
-ax1.set_title('Cloud Computering Cost')
-ax1.set_ylabel('cost_ecs')
-ax2.set_ylabel('cost_vm')
-ax1.legend(loc=2, prop={'size': 10})
-ax2.legend(loc=1, prop={'size': 10})
-plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%d'))
-plt.xticks(rotation=0)
-plt.gca().xaxis.set_minor_locator(mdates.DayLocator())
-ax1.grid()
-plt.gcf().set_size_inches(16, 9)
-plt.gcf().savefig('comp.png', dpi=100)
-#plt.show()
-plt.clf()
-
-##################
-#其它
-##################
-date_product.drop(['ecs','vm','oss','naspost','yundisk'],axis=1).plot.area(stacked=False,title='Other Services Cost')
-plt.legend(loc=1, prop={'size': 10})
-plt.ylabel('cost')
-plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%d'))
-plt.xticks(rotation=0)
-plt.gca().xaxis.set_minor_locator(mdates.DayLocator())
-plt.grid()
-plt.gcf().set_size_inches(16, 9)
-plt.gcf().savefig('others.png', dpi=100)
-#plt.show()
-plt.clf()
-
-##################
 #概览
 ##################
 labels=['ecs','vm','naspost','oss','yundisk','sls','nat_gw','slb','eip']
 colors=['tomato','salmon','yellowgreen','lightgreen','limegreen','lightskyblue','orange','gold','yellow']
 patches,l_text,p_text=plt.pie(date_product.sum().sort_values(ascending=False), explode=(0,0,0,0,0,0,0.2,0.4,0.6), autopct='%1.2f%%', \
 labels=labels,colors=colors,\
-textprops={'fontsize': 8})
+textprops={'fontsize': 6})
 plt.title("Cost overview")
 
 for t in l_text:
-    t.set_size(8)
+    t.set_size(6)
 
 plt.axis('equal')
 plt.legend()
-plt.gcf().set_size_inches(9, 9)
+plt.gcf().set_size_inches(6, 6)
+plt.subplots_adjust(left=0,bottom=0,right=0.95,top=0.93)
 plt.gcf().savefig('overview.png', dpi=100)
 #plt.show()
-
 plt.clf()
+
+##################
+#计算：2 Y-axis
+##################
+fig,ax1=plt.subplots()
+ax2=ax1.twinx()
+date_product.drop(['vm','sls','eip','slb','nat_gw','oss','naspost','yundisk'],axis=1).plot.area(stacked=False,ax=ax1)
+date_product.drop(['ecs','sls','eip','slb','nat_gw','oss','naspost','yundisk'],axis=1).plot.area(stacked=False,ax=ax2,color='salmon')
+ax1.set_title('Cloud Computering Cost')
+ax1.set_ylabel('cost(ecs)')
+ax2.set_ylabel('cost(vm)')
+ax1.legend(loc=2, prop={'size': 8})
+ax2.legend(loc=1, prop={'size': 8})
+plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%d'))
+plt.xticks(rotation=0)
+plt.gca().xaxis.set_minor_locator(mdates.DayLocator())
+ax1.grid()
+plt.gcf().set_size_inches(10, 6)
+plt.subplots_adjust(left=0.08,bottom=0.09,right=0.9,top=0.93)
+plt.gcf().savefig('comp.png', dpi=100)
+#plt.show()
+plt.clf()
+
+##################
+#存储
+##################
+date_product.drop(['vm','sls','eip','slb','nat_gw','ecs'],axis=1).plot.area(stacked=False,title='Cloud Storage Cost')
+plt.legend(loc=1, prop={'size': 8})
+plt.ylabel('cost')
+plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%d'))
+plt.xticks(rotation=0)
+plt.gca().xaxis.set_minor_locator(mdates.DayLocator())
+plt.grid()
+plt.gcf().set_size_inches(10, 6)
+plt.subplots_adjust(left=0.07,bottom=0.08,right=0.97,top=0.93)
+plt.gcf().savefig('storage.png', dpi=100)
+#plt.show()
+plt.clf()
+
+
+##################
+#其它
+##################
+date_product.drop(['ecs','vm','oss','naspost','yundisk'],axis=1).plot.area(stacked=False,title='Other Services Cost')
+plt.legend(loc=1, prop={'size': 8})
+plt.ylabel('cost')
+plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%d'))
+plt.xticks(rotation=0)
+plt.gca().xaxis.set_minor_locator(mdates.DayLocator())
+plt.grid()
+plt.gcf().set_size_inches(10, 6)
+plt.subplots_adjust(left=0.07,bottom=0.08,right=0.97,top=0.93)
+plt.gcf().savefig('others.png', dpi=100)
+#plt.show()
+plt.clf()
+
 
 '''
 #cost['产品明细'].drop_duplicates()
