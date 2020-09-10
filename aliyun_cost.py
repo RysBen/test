@@ -69,12 +69,20 @@ plt.clf()
 ##################
 labels=['ecs','vm','naspost','oss','yundisk','sls','nat_gw','slb','eip']
 colors=['tomato','salmon','yellowgreen','lightgreen','limegreen','lightskyblue','orange','gold','yellow']
-plt.pie(date_product.sum().sort_values(ascending=False), explode=(0,0,0,0,0,0,0.2,0.4,0.6), autopct='%1.2f%%', \
+patches,l_text,p_text=plt.pie(date_product.sum().sort_values(ascending=False), explode=(0,0,0,0,0,0,0.2,0.4,0.6), autopct='%1.2f%%', \
 labels=labels,colors=colors,\
 textprops={'fontsize': 8})
+plt.title("Cost overview")
+
+for t in l_text:
+    t.set_size(8)
+
 plt.axis('equal')
 plt.legend()
-plt.show()
+plt.gcf().set_size_inches(9, 9)
+plt.gcf().savefig('overview.png', dpi=100)
+#plt.show()
+
 plt.clf()
 
 '''
