@@ -90,6 +90,45 @@ plt.gcf().savefig('others.png', dpi=100)
 plt.clf()
 
 
+
+############################################################################################################################
+##################
+#概览2
+##################
+def prepare(csv):
+    cost=pd.read_csv(csv)
+    cost.replace('-',np.nan,inplace=True)   #np.nan vs. 'NaN'
+    cost['date']=cost['账单开始时间'].fillna(cost['消费时间']).astype('str').str.split(' ',expand=True)[0]
+    date_product=cost.groupby(['date','产品明细Code'])['应付金额'].sum().unstack()
+    date_product.index=pd.to_datetime(date_product.index)
+    return date_product
+
+jul=prepare('/biocluster/data/biobk/user_test/renshuaibing/aliyun_cost/202007_detail.csv')
+aug=prepare('/biocluster/data/biobk/user_test/renshuaibing/aliyun_cost/202008_detail.csv')
+
+labels=['ecs','vm','naspost','oss','yundisk','sls','nat_gw','slb','eip']
+colors=['tomato','salmon','yellowgreen','lightgreen','limegreen','lightskyblue','orange','gold','yellow']
+expl=(0,0,0,0,0,0,0.2,0.4,0.6)
+
+plt.pie(aug.sum().sort_values(ascending=False),autopct='%1.2f%%', \
+explode=expl,colors=colors, textprops={'fontsize': 6}, \
+radius=1, pctdistance=0.85, wedgeprops=dict(linewidth=2,width=0.3,edgecolor='w'))
+
+plt.pie(jul.sum().sort_values(ascending=False),autopct='%1.2f%%', \
+colors=colors, textprops={'fontsize': 6, 'color':'w'}, \
+radius=0.7, pctdistance=0.75, wedgeprops=dict(linewidth=2,width=0.3,edgecolor='w'))
+
+plt.title("cost overview (Aug. & Jul.)")
+plt.axis('equal')
+plt.legend(labels)
+plt.gcf().set_size_inches(6, 6)
+plt.subplots_adjust(left=0,bottom=0,right=0.95,top=0.93)
+plt.gcf().savefig('overview.png', dpi=200)
+#plt.show()
+############################################################################################################################
+
+
+
 '''
 #cost['产品明细'].drop_duplicates()
 ##########################################################################################
