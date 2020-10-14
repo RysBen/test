@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
 #read
-cost=pd.read_csv('/biocluster/data/biobk/user_test/renshuaibing/aliyun_cost/202008_detail.csv')
+cost=pd.read_csv('/biocluster/data/biobk/user_test/renshuaibing/aliyun_cost/202009_detail.csv')
 
 #prepare
 cost.replace('-',np.nan,inplace=True)   #np.nan vs. 'NaN'
@@ -127,7 +127,14 @@ plt.gcf().savefig('overview.png', dpi=200)
 #plt.show()
 ############################################################################################################################
 
+ecs=date_product['ecs'].sum();vm=date_product['vm'].sum()
+oss=date_product['oss'].sum();naspost=date_product['naspost'].sum();yundisk=date_product['yundisk'].sum()
+eip=date_product['eip'].sum();nat_gw=date_product['nat_gw'].sum();slb= date_product['slb'].sum(); sls=date_product['sls'].sum()
 
+print "计算类：",ecs,vm,ecs+vm
+print "存储类：",oss,naspost,yundisk,oss+naspost+yundisk
+print "其它：",eip,nat_gw,slb,sls,eip+nat_gw+slb+sls
+print "total:",ecs+vm+oss+naspost+yundisk+eip+nat_gw+slb+sls
 
 '''
 #cost['产品明细'].drop_duplicates()
