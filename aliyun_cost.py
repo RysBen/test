@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
 #read
-cost=pd.read_csv('/biocluster/data/biobk/user_test/renshuaibing/aliyun_cost/202009_detail.csv')
+cost=pd.read_csv('/biocluster/data/biobk/user_test/renshuaibing/aliyun/cost/202009_detail.csv')   ### m1/4
 
 #prepare
 cost.replace('-',np.nan,inplace=True)   #np.nan vs. 'NaN'
@@ -13,6 +13,7 @@ cost['date']=cost['账单开始时间'].fillna(cost['消费时间']).astype('str
 date_product=cost.groupby(['date','产品明细Code'])['应付金额'].sum().unstack()
 date_product.index=pd.to_datetime(date_product.index)
 
+'''
 ##################
 #概览
 ##################
@@ -33,6 +34,7 @@ plt.subplots_adjust(left=0,bottom=0,right=0.95,top=0.93)
 plt.gcf().savefig('overview.png', dpi=100)
 #plt.show()
 plt.clf()
+'''
 
 ##################
 #计算：2 Y-axis
@@ -103,8 +105,8 @@ def prepare(csv):
     date_product.index=pd.to_datetime(date_product.index)
     return date_product
 
-jul=prepare('/biocluster/data/biobk/user_test/renshuaibing/aliyun_cost/202007_detail.csv')
-aug=prepare('/biocluster/data/biobk/user_test/renshuaibing/aliyun_cost/202008_detail.csv')
+jul=prepare('/biocluster/data/biobk/user_test/renshuaibing/aliyun/cost/202007_detail.csv')   ### m2/4
+aug=prepare('/biocluster/data/biobk/user_test/renshuaibing/aliyun/cost/202008_detail.csv')   ### m3/4
 
 labels=['ecs','vm','naspost','oss','yundisk','sls','nat_gw','slb','eip']
 colors=['tomato','salmon','yellowgreen','lightgreen','limegreen','lightskyblue','orange','gold','yellow']
@@ -118,7 +120,7 @@ plt.pie(jul.sum().sort_values(ascending=False),autopct='%1.2f%%', \
 colors=colors, textprops={'fontsize': 6, 'color':'w'}, \
 radius=0.7, pctdistance=0.75, wedgeprops=dict(linewidth=2,width=0.3,edgecolor='w'))
 
-plt.title("cost overview (Aug. & Jul.)")
+plt.title("cost overview (Aug. & Jul.)")   ### m4/4
 plt.axis('equal')
 plt.legend(labels)
 plt.gcf().set_size_inches(6, 6)
