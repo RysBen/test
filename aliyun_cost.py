@@ -13,29 +13,6 @@ cost['date']=cost['账单开始时间'].fillna(cost['消费时间']).astype('str
 date_product=cost.groupby(['date','产品明细Code'])['应付金额'].sum().unstack()
 date_product.index=pd.to_datetime(date_product.index)
 
-'''
-##################
-#概览
-##################
-labels=['ecs','vm','naspost','oss','yundisk','sls','nat_gw','slb','eip']
-colors=['tomato','salmon','yellowgreen','lightgreen','limegreen','lightskyblue','orange','gold','yellow']
-patches,l_text,p_text=plt.pie(date_product.sum().sort_values(ascending=False), explode=(0,0,0,0,0,0,0.2,0.4,0.6), autopct='%1.2f%%', \
-labels=labels,colors=colors,\
-textprops={'fontsize': 6})
-plt.title("Cost overview")
-
-for t in l_text:
-    t.set_size(6)
-
-plt.axis('equal')
-plt.legend()
-plt.gcf().set_size_inches(6, 6)
-plt.subplots_adjust(left=0,bottom=0,right=0.95,top=0.93)
-plt.gcf().savefig('overview.png', dpi=100)
-#plt.show()
-plt.clf()
-'''
-
 ##################
 #计算：2 Y-axis
 ##################
@@ -137,6 +114,31 @@ print "计算类：",ecs,vm,ecs+vm
 print "存储类：",oss,naspost,yundisk,oss+naspost+yundisk
 print "其它：",eip,nat_gw,slb,sls,eip+nat_gw+slb+sls
 print "total:",ecs+vm+oss+naspost+yundisk+eip+nat_gw+slb+sls
+
+
+
+'''
+##################
+#概览
+##################
+labels=['ecs','vm','naspost','oss','yundisk','sls','nat_gw','slb','eip']
+colors=['tomato','salmon','yellowgreen','lightgreen','limegreen','lightskyblue','orange','gold','yellow']
+patches,l_text,p_text=plt.pie(date_product.sum().sort_values(ascending=False), explode=(0,0,0,0,0,0,0.2,0.4,0.6), autopct='%1.2f%%', \
+labels=labels,colors=colors,\
+textprops={'fontsize': 6})
+plt.title("Cost overview")
+
+for t in l_text:
+    t.set_size(6)
+
+plt.axis('equal')
+plt.legend()
+plt.gcf().set_size_inches(6, 6)
+plt.subplots_adjust(left=0,bottom=0,right=0.95,top=0.93)
+plt.gcf().savefig('overview.png', dpi=100)
+#plt.show()
+plt.clf()
+'''
 
 '''
 #cost['产品明细'].drop_duplicates()
